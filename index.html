@@ -49,10 +49,6 @@ margin-bottom:10px;
 cursor:pointer;
 }
 
-.chat-item:hover{
-background:#444;
-}
-
 /* MAIN */
 
 .main{
@@ -125,8 +121,6 @@ cursor:pointer;
 
 <body>
 
-<!-- SIDEBAR -->
-
 <div class="sidebar">
 
 <button class="new-chat" onclick="newChat()">
@@ -137,8 +131,6 @@ cursor:pointer;
 </div>
 
 </div>
-
-<!-- MAIN -->
 
 <div class="main">
 
@@ -163,8 +155,6 @@ Send
 </div>
 
 <script>
-
-const apiKey = "paste your key here";
 
 let chats = [];
 let currentChat = [];
@@ -274,74 +264,29 @@ renderChat();
 
 try{
 
-const response = await fetch(
+const response =
+await fetch("/api/chat",{
 
-"https://openrouter.ai/api/v1/chat/completions",
-
-{
 method:"POST",
 
 headers:{
-
-"Authorization":
-"Bearer " + apiKey,
-
-"Content-Type":"application/json",
-
-"HTTP-Referer":
-"https://tech1bot.neocities.org/"
-
+"Content-Type":"application/json"
 },
 
 body:JSON.stringify({
-
-model:
-"deepseek/deepseek-chat-v3-0324",
-
-messages:[
-
-{
-role:"system",
-content:
-"Reply only in English"
-},
-
-{
-role:"user",
-content:userText
-}
-
-]
-
+message:userText
 })
 
-}
-
-);
+});
 
 const data =
 await response.json();
 
-console.log(data);
-
 currentChat.pop();
 
-if(data.error){
-
 currentChat.push({
 role:"ai",
-text:data.error.message
-});
-
-renderChat();
-
-return;
-
-}
-
-currentChat.push({
-role:"ai",
-text:data.choices[0].message.content
+text:data.reply
 });
 
 renderChat();
